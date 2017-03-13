@@ -25,7 +25,7 @@ module.exports = (req, res, next) => {
 				let captcha = result.text.trim()
 				req.log.trace(`confidence: ${result.confidence}, text: ${captcha}`)
 				let loginOptions = {
-					url: 'http://evarsity.srmuniv.ac.in/srmswi/usermanager/youLogin.jsp',
+					uri: 'http://evarsity.srmuniv.ac.in/srmswi/usermanager/youLogin.jsp',
 					method: 'POST',
 					form: {
 						'Searchtext1:txtSearchText': 'Search',
@@ -53,7 +53,22 @@ module.exports = (req, res, next) => {
 				return request(loginOptions)
 			})
 			.then((response) => {
-				res.send("login successful")
+				let token = null
+				for (let cookie of j.getCookies(captchaOptions.uri)) {
+					if (cookie.hasOwnProperty('key')) {
+						req.log.trace(cookie)
+						if (cookie.key === "JSESSIONID") {
+							token = `${cookie.value}`
+							break
+						}
+					}
+				}
+				if (token === null) {
+					req.log.info("login failed");
+					res.sendStatus(401);
+				} else {
+					res.send(querystring.escape(token));
+				}
 			})
 			.catch((err) => {
 				next(err)
