@@ -16,11 +16,11 @@ switch(app.get('env')){
 				stream: process.stdout
 				}]
 			}))
-		break;
+		break
 	case 'production':
 		app.use(require('express-bunyan-logger')())
 		/*add file rotation*/
-		break;
+		break
 }
 
 app.use(helmet())
@@ -34,12 +34,10 @@ require('./routes.js')(app)
 
 app.use(function(req, res){
 		res.sendStatus(404)
-	}
-);
+})
 app.use(function(err, req, res, next){
-		req.log.error(err)
-		res.sendStatus(500)
-	}
-);
+	req.log.error(err)
+	res.sendStatus(500)
+})
 
 app.listen(app.get('port'))

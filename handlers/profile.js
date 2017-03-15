@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 const cheerio = require('cheerio')
 const querystring = require('querystring')
 const request = require('request-promise-native')
@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
 			.then((response) => {
 				let json = parser(response)
 				if (json !== null) {
-					res.setHeader('Content-Type', 'application/json');
+					res.setHeader('Content-Type', 'application/json')
 					res.send(JSON.stringify(json))
 				} else {
 					res.sendStatus(401)
