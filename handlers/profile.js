@@ -11,9 +11,21 @@ module.exports = (req, res, next) => {
 				Cookie: `JSESSIONID=${querystring.unescape(req.params.id)}`
 			}
 		}
+		let json
 		request(options)
 			.then((response) => {
-				let json = parser(response)
+				json = parser(response)
+				let options = { 
+					uri: json.image,
+					encoding: null,
+					headers: {
+						Cookie: `JSESSIONID=${querystring.unescape(req.params.id)}`
+					}
+				}
+				return request(options)
+			})
+			.then((body) => {
+				json.image = new Buffer(body, 'binary').toString('base64')
 				if (json !== null) {
 					res.setHeader('Content-Type', 'application/json')
 					res.send(JSON.stringify(json))
