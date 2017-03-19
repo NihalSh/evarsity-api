@@ -33,6 +33,7 @@ module.exports = (req, res, next) => {
 function parser(body) {
 	let $ = cheerio.load(body)
 	let profile = {}
+	profile.image = `http://evarsity.srmuniv.ac.in/srmswi/${$('table').find('img').attr('src').split('../')[1]}`.trim()
 	$('table').last().find('tr:nth-of-type(n + 3)').each( function (index, element) {
 		profile[$(element).find('td').first().text().trim()] = $(element).find('td').last().text().trim()
 		}
