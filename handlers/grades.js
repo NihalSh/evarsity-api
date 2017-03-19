@@ -53,7 +53,7 @@ function parser(body) {
 		let subject = {}
 		let headings = []
 		table.find('tr[class="subTitle"]').find('td').each(function(index, element) {
-			headings.push($(element).text().trim())
+			headings.push($(element).text().trim().replace('.', ''))
 		})
 		table.find('tr').each(function(index, element) {
 			if ($(element).attr('align') === "left") {
