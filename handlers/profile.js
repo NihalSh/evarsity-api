@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 const cheerio = require('cheerio')
 const querystring = require('querystring')
 const request = require('request-promise-native')
@@ -11,11 +11,23 @@ module.exports = (req, res, next) => {
 				Cookie: `JSESSIONID=${querystring.unescape(req.params.id)}`
 			}
 		}
+		let json
 		request(options)
 			.then((response) => {
-				let json = parser(response)
+				json = parser(response)
+				let options = { 
+					uri: json.image,
+					encoding: null,
+					headers: {
+						Cookie: `JSESSIONID=${querystring.unescape(req.params.id)}`
+					}
+				}
+				return request(options)
+			})
+			.then((body) => {
+				json.image = new Buffer(body, 'binary').toString('base64')
 				if (json !== null) {
-					res.setHeader('Content-Type', 'application/json');
+					res.setHeader('Content-Type', 'application/json')
 					res.send(JSON.stringify(json))
 				} else {
 					res.sendStatus(401)
@@ -33,6 +45,7 @@ module.exports = (req, res, next) => {
 function parser(body) {
 	let $ = cheerio.load(body)
 	let profile = {}
+	profile.image = `http://evarsity.srmuniv.ac.in/srmswi/${$('table').find('img').attr('src').split('../')[1]}`.trim()
 	$('table').last().find('tr:nth-of-type(n + 3)').each( function (index, element) {
 		profile[$(element).find('td').first().text().trim()] = $(element).find('td').last().text().trim()
 		}
