@@ -18,7 +18,7 @@
     "helmet": "^3.5.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.3",
-    "tesseract.js": "^1.0.10",
+    "tesseract.js": "^2.0.0",
     "snyk": "^1.189.0"
   },
   "snyk": true
